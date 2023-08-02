@@ -1,0 +1,11 @@
+1)João está trabalhando em um sistema Web e ele precisa enviar cabeçalhos HTTP em diversos momentos para, por exemplo, definir cookies
+ou redirecionar usuários.
+Ao tentar enviar um desses cabeçalhos, João percebeu o seguinte Warning sendo emitido por seu código:
+Cannot modify header information - headers already sent.
+Com os conhecimentos adquiridos nos cursos de PHP na Web, quais dos seguintes problemas poderá ser encontrado no código de João?
+
+Antes do envio do cabeçalho há alguma saída (exibição) de dados.
+
+
+Se exibirmos algo antes de enviar um cabeçalho, seja essa exibição proposital (através da função echo por exemplo) ou até mesmo acidental
+ (através da emissão de erros do PHP), nós receberemos um aviso dizendo que essa operação não é possível, pois os cabeçalhos já terão sido enviados.
