@@ -5,7 +5,16 @@ Cannot modify header information - headers already sent.
 Com os conhecimentos adquiridos nos cursos de PHP na Web, quais dos seguintes problemas poderá ser encontrado no código de João?
 
 Antes do envio do cabeçalho há alguma saída (exibição) de dados.
-
-
 Se exibirmos algo antes de enviar um cabeçalho, seja essa exibição proposital (através da função echo por exemplo) ou até mesmo acidental
  (através da emissão de erros do PHP), nós receberemos um aviso dizendo que essa operação não é possível, pois os cabeçalhos já terão sido enviados.
+
+ 2)Cláudia, ao trabalhar em uma funcionalidade que depende do upload de um arquivo, percebeu que apesar de selecionar um arquivo válido no formulário,
+ continuava não o recebendo no servidor.
+ Com os conhecimentos adquiridos nessa aula, qual pode ser a causa do problema de Cláudia?
+
+ Ela não definiu o atributo enctype com o valor multipart/form-data.
+
+
+ Esse atributo (enctype="multipart/form-data") é obrigatório, para que o navegador saiba como enviar arquivos corretamente através de um formulário.
+ Sem ele, o navegador não sabe como transformar o conteúdo do arquivo em um texto que será enviado ao servidor. Com isso, no PHP, a variável $_FILES
+ simplesmente chegará vazia.
