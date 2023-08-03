@@ -25,6 +25,13 @@ class LoginController implements Controller
         $userData = $statement->fetch(\PDO::FETCH_ASSOC); //se o e-mail estiver correto, ele valida com os dados do usuario
         $correctPassword = password_verify($password, $userData['password'] ?? ''); //compara a senha com o hash armazenado no banco. Essa função verifica qual foi o algoritmo utilizado para gerar o hash da senha, com qual vetor de inicialização, com qual processamento, entre outros detalhes. E se o e-mail não der certo,na senha, ele devolve para a gente uma string vazia
 
+        if (password_needs_rehash($userData['password'], PASSWORD_ARGON2ID)) { //verifica se a senha do usuario esta utilizando o hash mais atual, se não estiver, atualiza o hash
+            $statement = $this->pdo->prepare('UPDATE users SET password = ? WHERE id = ?');
+            $statement->bindValue(1, password_hash($password, PASSWORD_ARGON2ID));
+            $statement->bindValue(2, $userData['id']);
+            $statement->execute();
+        }
+
         //eu nunca posso exibir algo antes de iniciar a session, pois vai dar erro ao enviar a requisição
         if ($correctPassword) { //se for verdadeiro...
             $_SESSION['logado'] = true; //super global que verifica através do coockie do navegador se o usuario esta logado

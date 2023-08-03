@@ -28,11 +28,17 @@ class NewVideoController implements Controller
 
         $video = new Video($url, $titulo);
         if ($_FILES['image']['error'] === UPLOAD_ERR_OK) { //se a chave de erro na variavel imagem for igual UPLOAD_ERR_OK (0), eu envio a imagem
-            move_uploaded_file(
-                $_FILES['image']['tmp_name'],//tmp_name é onde o php salvou temporariamente o arquivo enviado
-                __DIR__ . '/../../public/img/uploads' . $_FILES['image']['name'] //move para a pasta com o nome que a foto estava no meu PC
-            );
-            $video->setFilePath($_FILES['image']['name']);
+            $finfo = new \finfo(FILEINFO_MIME_TYPE); //verifica o tipo de arquivo que está vindo, mesmo que a extensão seja .jpg, se o arquivo não for uma imagem, ele bloqueia
+            $mimeType = $finfo->file($_FILES['image']['name']);
+
+            if (is_string($mimeType) && str_starts_with($mimeType, 'image/')) {
+                $safeFileName = uniqid('upload_') .'_' . pathinfo($_FILES['image']['name'], PATHINFO_BASENAME); //esse pathinfo pegando o base name pega só o nome básico do arquivo mais a extenão, sem pegar o caminho completo das pastas
+                move_uploaded_file(
+                    $_FILES['image']['tmp_name'],//tmp_name é onde o php salvou temporariamente o arquivo enviado
+                    __DIR__ . '/../../public/img/uploads' . $safeFileName //move para a pasta com o nome que a foto estava no meu PC
+                );
+                $video->setFilePath($safeFileName);
+            }
         }
 
         $success = $this->videoRepository->add($video);
