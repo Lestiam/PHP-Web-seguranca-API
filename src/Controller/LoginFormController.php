@@ -2,7 +2,7 @@
 
 namespace Alura\Mvc\Controller;
 
-class LoginFormController implements Controller
+class LoginFormController extends ControllerWithHtml implements Controller
 {
 
     public function processaRequisicao(): void
@@ -11,6 +11,6 @@ class LoginFormController implements Controller
             header('Location: /'); //se o usuario estiver logado, eu não deixo ele acessar novamente a página de login
             return;
         }
-        require_once __DIR__ . '/../../views/login-form.php';
+        echo $this->renderTemplate('login-form');
     }
 }
