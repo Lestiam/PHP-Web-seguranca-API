@@ -2,8 +2,11 @@
 
 namespace Alura\Mvc\Controller;
 
+use Alura\Mvc\Helper\FlashMessageTrait;
+
 class LoginController implements Controller
 {
+    use FlashMessageTrait;
     private \PDO $pdo;
 
     public function __construct()
@@ -37,7 +40,8 @@ class LoginController implements Controller
             $_SESSION['logado'] = true; //super global que verifica através do coockie do navegador se o usuario esta logado
             header('Location: /'); //redireciona para a listagem de videos
         } else {
-            header('Location: /login?sucesso=0');
+            $this->addErrorMessage('Usuário ou senha inválidos');
+            header('Location: /login');
         }
     }
 }
