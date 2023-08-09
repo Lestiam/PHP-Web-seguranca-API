@@ -3,8 +3,12 @@
 namespace Alura\Mvc\Controller;
 
 use Alura\Mvc\Helper\FlashMessageTrait;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class LoginController implements Controller
+class LoginController implements RequestHandlerInterface
 {
     use FlashMessageTrait;
     private \PDO $pdo;
@@ -15,7 +19,7 @@ class LoginController implements Controller
         $this->pdo = new \PDO("sqlite:$dbPath");
     }
 
-    public function processaRequisicao(): void
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL); //busca os dados do formulario e valida se o e-mail esta correto. Se o email vier incorreto ou vazio, então ele nem faz nada
         $password = filter_input(INPUT_POST, 'password');
@@ -28,6 +32,11 @@ class LoginController implements Controller
         $userData = $statement->fetch(\PDO::FETCH_ASSOC); //se o e-mail estiver correto, ele valida com os dados do usuario
         $correctPassword = password_verify($password, $userData['password'] ?? ''); //compara a senha com o hash armazenado no banco. Essa função verifica qual foi o algoritmo utilizado para gerar o hash da senha, com qual vetor de inicialização, com qual processamento, entre outros detalhes. E se o e-mail não der certo,na senha, ele devolve para a gente uma string vazia
 
+        if (!$correctPassword) {
+            $this->addErrorMessage('Usário ou senha inválidos');
+            return new Response(302, ['Location' => '/login']);
+        }
+
         if (password_needs_rehash($userData['password'], PASSWORD_ARGON2ID)) { //verifica se a senha do usuario esta utilizando o hash mais atual, se não estiver, atualiza o hash
             $statement = $this->pdo->prepare('UPDATE users SET password = ? WHERE id = ?');
             $statement->bindValue(1, password_hash($password, PASSWORD_ARGON2ID));
@@ -35,13 +44,7 @@ class LoginController implements Controller
             $statement->execute();
         }
 
-        //eu nunca posso exibir algo antes de iniciar a session, pois vai dar erro ao enviar a requisição
-        if ($correctPassword) { //se for verdadeiro...
-            $_SESSION['logado'] = true; //super global que verifica através do coockie do navegador se o usuario esta logado
-            header('Location: /'); //redireciona para a listagem de videos
-        } else {
-            $this->addErrorMessage('Usuário ou senha inválidos');
-            header('Location: /login');
-        }
+        $_SESSION['logado'] = true;
+        return new Response(302, ['Location' => '/login']);
     }
 }

@@ -34,3 +34,14 @@ Se exibirmos algo antes de enviar um cabeçalho, seja essa exibição proposital
    Ao usar uma trait, a classe não passa a ser representada por aquele tipo também. Sendo assim, códigos que dependam do código implementado na
    trait não podem depender de qualquer classe que possua aquela trait. Eles precisam depender diretamente de alguma das classes que a usam.
    Uma solução para esse cenário seria criar um interface.
+
+   _Get -> getQueryParams()
+   _POST -> getParseBody()
+
+   5)Durante essa aula foi deixada uma rápida dica, que talvez tenha passado despercebida. Essa dica foi: fazer uso da PSR-17 para criar nossas respostas.
+   Isso torna o código ainda mais independente de implementações específicas.
+   Como nós poderíamos usar a PSR-17 para criar uma nova resposta, ao invés de simplesmente fazermos new Response de um pacote específico?
+
+   Recebendo uma implementação de ResponseFactoryInterface no construtor.
+   Se recebemos um objeto cujo tipo é ResponseFactoryInterface, garantimos que estamos dependendo somente das PSRs e não de algum pacote específico.
+   Dessa forma, ao criar nossos controllers, podemos passar qualquer implementação da PSR-17. Inclusive uma nossa, caso queiramos.

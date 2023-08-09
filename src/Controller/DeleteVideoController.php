@@ -4,27 +4,41 @@ declare(strict_types=1);
 
 namespace Alura\Mvc\Controller;
 
+use Alura\Mvc\Helper\FlashMessageTrait;
 use Alura\Mvc\Repository\VideoRepository;
+use Nyholm\Psr7\Response;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class DeleteVideoController implements Controller
+class DeleteVideoController implements RequestHandlerInterface
 {
+    use FlashMessageTrait;
     public function __construct(private VideoRepository $videoRepository)
     {
     }
 
-    public function processaRequisicao(): void
+    public function handle(ServerRequestInterface $request): ResponseInterface //sempre recebo requisições e sempre devolvo respostas
     {
-        $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        $queryParams = $request->getQueryParams(); //nessa linha eu pego o equivalente ao _GET
+        $id = filter_var($queryParams['id'], FILTER_VALIDATE_INT); //e se euq uero realizar filtros, como eu não estou usando do input mais e sim de uma variavel já existente, eu chamo o filter_var
         if ($id === null || $id === false) {
-            header('Location: /?sucesso=0');
-            return;
+            $this->addErrorMessage('ID inválido');
+            return new Response(302, [
+                'Location' => '/'
+            ]); //peguei do site do packagist
         }
 
         $success = $this->videoRepository->remove($id);
         if ($success === false) {
-            header('Location: /?sucesso=0');
+            $this->addErrorMessage('Erro ao remover vídeo');
+            return new Response(302, [
+                'Location' => '/'
+            ]);
         } else {
-            header('Location: /?sucesso=1');
+            return new Response(302, [
+                'Location' => '/'
+            ]);
         }
 
     }
