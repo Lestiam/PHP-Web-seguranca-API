@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Alura\Mvc\Controller;
 
 use Alura\Mvc\Entity\Video;
-use Alura\Mvc\Helper\HtmlRendererTrait;
 use Alura\Mvc\Repository\VideoRepository;
+use League\Plates\Engine;
 use Nyholm\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -14,24 +14,28 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class VideoFormController implements RequestHandlerInterface
 {
-    use HtmlRendererTrait;
-    public function __construct(private VideoRepository $repository)
+    public function __construct(
+        private VideoRepository $repository,
+        private Engine $templates,
+    )
     {
     }
 
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $queryParams = $request->getQueryParams();
-        $id = filter_var($queryParams['id'], FILTER_VALIDATE_INT);
+        $id = filter_var($queryParams['id'] ?? '', FILTER_VALIDATE_INT); //passo um array vazio caso não exista ID
         /** @var ?Video $video */
         $video = null;
-        if ($id !== false && $id !== null) {
+        if ($id !== false && $id !== null) { //aqui se ele retornar falso, ele não busca o ID
             $video = $this->repository->find($id);
         }
 
-        return new Response(200, body: $this->renderTemplate(
+        return new Response(200, body: $this->templates->render(
             'video-form',
-            ['video' => $video]
-        ));
+            [
+                'id' => $id,
+                'video' => $video
+            ]));
     }
 }

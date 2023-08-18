@@ -15,9 +15,7 @@
 </head>
 
 <body>
-
 <header>
-
     <nav class="cabecalho">
         <a class="logo" href="/"></a>
 
@@ -30,8 +28,12 @@
 </header>
 
 <?php if (isset($_SESSION['error_message'])): ?>
-<h2 class="formulario__titulo erro">
-    <?= $_SESSION['error_message']; ?>
-    <?php unset($_SESSION['error_message']); ?>
-</h2>
+    <h2 class="formulario__titulo erro">
+        <?= $_SESSION['error_message']; ?>
+        <?php unset($_SESSION['error_message']); ?>
+    </h2>
 <?php endif; ?>
+
+<?= $this->section('content'); //isso vem do plates, é uma sessão especial que vai ser preeenchida com o conteúdo do arquivo que utilizar este arquivo aqui como layout?>
+</body>
+</html>

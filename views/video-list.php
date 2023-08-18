@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/inicio-html.php';
+$this->layout('layout'); //diz que este arquivo utiliza o meu layout.php
 /** @var \Alura\Mvc\Entity\Video[] $videoList */
 ?>
 
@@ -17,7 +17,7 @@ require_once __DIR__ . '/inicio-html.php';
                         allowfullscreen></iframe>
             <?php endif; ?>
             <div class="descricao-video">
-                <h3><?= $video->title; ?></h3>
+                <h3><?= htmlentities($video->title); //sanitiza para que o cliente não consiga usar um script?></h3>
                 <div class="acoes-video">
                     <a href="/editar-video?id=<?= $video->id; ?>">Editar</a>
                     <a href="/remover-video?id=<?= $video->id; ?>">Excluir</a>
@@ -26,5 +26,3 @@ require_once __DIR__ . '/inicio-html.php';
         </li>
     <?php endforeach; ?>
 </ul>
-
-<?php require_once __DIR__ . '/fim-html.php';

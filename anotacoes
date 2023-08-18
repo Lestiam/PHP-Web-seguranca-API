@@ -45,3 +45,13 @@ Se exibirmos algo antes de enviar um cabeçalho, seja essa exibição proposital
    Recebendo uma implementação de ResponseFactoryInterface no construtor.
    Se recebemos um objeto cujo tipo é ResponseFactoryInterface, garantimos que estamos dependendo somente das PSRs e não de algum pacote específico.
    Dessa forma, ao criar nossos controllers, podemos passar qualquer implementação da PSR-17. Inclusive uma nossa, caso queiramos.
+
+   6)Ricardo está conhecendo o código da empresa onde ele acabou de entrar e se deparou com os arquivos de view fazendo uso de um conceito de layouts.
+   Essa é a primeira vez que Ricardo usa uma template engine.
+   Como podemos explicar para Ricardo o que é um layout quando usamos template engines no PHP?
+
+   Um layout é basicamente uma view especial, que define uma estrutura padrão para que as demais views a utilizem.
+
+
+   Ao usar template engines nós podemos definir um template padrão, contendo os cabeçalhos, menus e tudo mais que for compartilhado entre diversas views
+    (e ter vários layouts diferentes também). Com isso, podemos ter nossos arquivos de view mais simples, definindo apenas o pedaço de código que for específico para cada página.

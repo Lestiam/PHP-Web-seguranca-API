@@ -29,7 +29,7 @@ class NewVideoController implements RequestHandlerInterface
                 'Location' => '/'
             ]);
         }
-        $titulo = filter_var($requestBody['titulo']);
+        $titulo = htmlspecialchars($requestBody['titulo'],FILTER_FLAG_NO_ENCODE_QUOTES,'UTF-8');//faz o filtro do meu código para que eu não o script enviado pelo usuario não apareça na minha tela
         if ($titulo === false) {
             $this->addErrorMessage('Título não informado');
             return new Response(302, [
